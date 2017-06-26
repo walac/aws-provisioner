@@ -560,14 +560,16 @@ api.declare({
       token: token,
     });
 
+    let scopes = [
+      `assume:worker-type:${this.provisionerId}/${secret.workerType}`,
+      'assume:worker-id:*',
+    ];
+
     return res.reply({
       data: secret.secrets,
-      scopes: secret.scopes,
+      scopes: scopes,
       credentials: taskcluster.createTemporaryCredentials({
-        scopes: [
-          `assume:worker-type:${this.provisionerId}/${secret.workerType}`,
-          'assume:worker-id:*',
-        ],
+        scopes,
         expiry: taskcluster.fromNow('96 hours'),
         credentials: this.credentials,
       }),
